@@ -1,0 +1,74 @@
+:root {
+  --body-bg-color: #E6EEF9;
+  --primary-color: #3176FF;;
+  --secondary-color: #2ecc71;
+  --font-size-xl: 4rem;
+  --font-size-lg: 3rem;
+  --font-size-md: 2rem;
+  --font-size-sm: 1.5rem;
+  --font-size-xs: 1rem;
+}
+
+body {
+    background-color: var(--body-bg-color);
+  }
+
+.navbar {
+  background-color: white;
+  border-radius: 35px;
+  margin-top: 20px;
+  padding: 15px;
+}
+.navbar-brand {
+  font-size: var(--font-size-sm);
+  font-weight: bold;
+}
+.hero {
+  text-align: center;
+  margin-top: 50px;
+}
+.hero h1 {
+  font-size: var(--font-size-xl);
+  font-weight: bold;
+}
+.hero p {
+  font-size: var(--font-size-sm);
+  color: gray;
+}
+.btn-primary {
+  margin-top: 20px;
+  border-radius: 20px;
+  padding: 10px 30px;
+}
+
+.nav-link:hover {
+  color: var(--primary-color);
+  font-weight: bold;
+}
+
+/* Styling for clickable list */
+.list-group-item:hover {
+  background-color: #f8f9fa;
+  cursor: pointer;
+}
+
+/* Styling for the column titles */
+.list-header {
+  font-weight: bold;
+  font-size: 1.1rem;
+  background-color: #f1f1f1;
+  padding: 10px;
+  margin-bottom: 10px;
+}
+
+.list-group-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: var(--body-bg-color);
+}
+
+/* For responsiveness */
+.column {
+  width: 33%;
+}
