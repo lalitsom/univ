@@ -1,0 +1,25 @@
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg container">
+    <a class="navbar-brand" href="/">
+        <img src="static/images/juspay-logo.svg" alt="logo" width="30" height="30" class="d-inline-block align-top">
+        LEARN.</a>
+    <div class="collapse navbar-collapse justify-content-end">
+      <ul class="navbar-nav">
+        <li class="nav-item"><a class="nav-link" href="/problems">Problems</a></li>
+        <li class="nav-item"><a class="nav-link" href="/leaderboard">Leaderboard</a></li>
+
+        {% if logged_in %}
+            <li class="nav-item">
+                <a class="btn btn-outline-dark rounded-circle profile-circle" href="/profile" >
+                    {{ user_initials }}
+                </a>
+            </li>
+            {% else %}
+            <li class="nav-item">
+                <a class="btn btn-outline-primary" href="/signIn">Sign In</a>
+            </li>
+        {% endif %}
+
+      </ul>
+    </div>
+  </nav>

@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+
+{% include "common/head.html" %}
+
+{% include "common/navbar.html" %}
+
+  <div class="container mt-5">
+    <!-- List Header -->
+    <div class="list-group-item list-group-header">
+      <div class="column"><strong>Id</strong></div>
+      <div class="column"><strong>Problem</strong></div>
+      <div class="column"><strong>Tags</strong></div>
+      <div class="column"><strong>Difficulty</strong></div>
+      <div class="column"><strong>Solvers</strong></div>
+      <div class="column"><strong>Date</strong></div>
+  </div>
+  
+    <!-- List Group -->
+    <ul class="list-group">
+
+      {% for problem in problems %}
+      <li class="list-group-item" onclick="window.location.href='{{problem.link}}';">
+        <div class="column problem-column">{{problem.id}}</div>
+        <div class="column problem-column text-decoration-underline">{{problem.name}}</div>
+        <div class="column problem-column">{{problem.tags}}</div>
+        <div class="column problem-column">{{problem.difficulty}}</div>
+        <div class="column problem-column">{{problem.solvers}}</div>
+        <div class="column problem-column">{{problem.date}}</div>
+      </li>
+      {% endfor %}
+
+    </ul>
+  </div>
+
+  
+
+
+  {% include "common/foot.html" %}
+
+</body>
+</html>
