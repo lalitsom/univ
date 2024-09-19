@@ -51,32 +51,12 @@ body {
   color: var(--primary-color);
 }
 
-/* Styling for clickable list */
-.list-group-item:hover {
-  background-color: #f8f9fa;
-  cursor: pointer;
-}
-
-/* Styling for the column titles */
-.list-header {
-  font-weight: bold;
-  font-size: 1.1rem;
-  background-color: #f1f1f1;
-  padding: 10px;
-  margin-bottom: 10px;
-}
-
-.list-group-item {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background-color: var(--body-bg-color);
-}
 
 /* For responsiveness */
 .column {
   width: 33%;
 }
+
 
 .profile-circle {
   width: 40px;

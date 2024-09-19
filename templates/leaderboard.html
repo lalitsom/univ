@@ -8,26 +8,22 @@
 
 <div class="container mt-5">
 
-  <table id="problemTable" class="table table-striped" style="width:100%">
+  <table id="leaderBoardTable" class="table table-striped" style="width:100%">
     <thead>
       <tr>
-        <th>Id</th>
-        <th>Problem</th>
-        <th>Tags</th>
-        <th>Difficulty</th>
-        <th>Solvers</th>
-        <th>Date</th>
+        <th>Rank</th>
+        <th>User</th>
+        <th>Solved</th>
+        <th>Join Date</th>
       </tr>
     </thead>
     <tbody>
-      {% for problem in problems %}
+      {% for user in users %}
       <tr>
-        <td>{{problem.id}}</td>
-        <td> <a href="{{problem.link}}"> {{problem.name}} </a> </td>
-        <td>{{problem.tags}}</td>
-        <td>{{problem.difficulty}}</td>
-        <td>{{problem.solvers}}</td>
-        <td>{{problem.date}}</td>
+        <td>{{user.rank}}</td>
+        <td>{{user.name}}</td>
+        <td>{{user.solved}}</td>
+        <td>{{user.join_date}}</td>
       </tr>
       {% endfor %}
 
@@ -43,7 +39,7 @@
 
 
 <script>
-  new DataTable('#problemTable');
+  new DataTable('#leaderBoardTable');
 </script>
 
 {% include "common/foot.html" %}
