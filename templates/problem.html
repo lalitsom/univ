@@ -8,7 +8,7 @@
 
 <div class="container mt-5">
 
-  <h3> Problem: {{problem_id}} </h3>
+  <h3> Problem: {{problem.number}} </h3>
 </div>
 
 
@@ -17,9 +17,9 @@
     <!-- Problem Statement -->
     <div class="card">
       <div class="card-body">
-        <h3 class="card-title">{{problem_name}}</h3>
+        <h3 class="card-title">{{problem.name}}</h3>
         <p class="card-text">
-          {{problem_description}}
+          {{problem.description}}
         </p>
       </div>
     </div>
@@ -39,7 +39,7 @@
     </button>
     <div class="collapse mt-2" id="hint">
       <div class="card card-body">
-        {{problem_hint}}
+        {{problem.hint}}
       </div>
     </div>
   </div>

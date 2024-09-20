@@ -16,8 +16,7 @@ pub async fn serve_static_file(path: web::Path<String>) -> Result<NamedFile> {
 pub async fn serve_home() -> Result<HttpResponse> {
     // Create the template instance with dynamic data
     let template = serve_types::HomeTemplate {
-        logged_in: mock::is_logged_in(),
-        user_initials: mock::user_initials()
+        logged_in: mock::is_logged_in()
     };
 
     // Render the template and return as an HTTP response
@@ -33,8 +32,7 @@ pub async fn serve_problems() -> Result<HttpResponse> {
 
     let template = serve_types::ProblemsTemplate {
         logged_in: mock::is_logged_in(),
-        user_initials: mock::user_initials(),
-        problems: mock::get_problems()
+        problems: mock::get_all_problems()
     };
 
     // Render the template and return as an HTTP response
@@ -48,11 +46,7 @@ pub async fn serve_problems() -> Result<HttpResponse> {
 pub async fn serve_problem() -> Result<HttpResponse> {
     let template = serve_types::ProblemTemplate {
         logged_in: mock::is_logged_in(),
-        user_initials: mock::user_initials(),
-        problem_name: "Two Sum",
-        problem_description: "Given an array of integers nums and an integer target, return indices of the two numbers such that they add up to target.",
-        problem_hint: "try hintttt",
-        problem_id: 1
+        problem: mock::get_problem()
     };
 
     // Render the template and return as an HTTP response
@@ -63,37 +57,18 @@ pub async fn serve_problem() -> Result<HttpResponse> {
     Ok(HttpResponse::Ok().content_type("text/html").body(rendered))
 }
 
-pub async fn serve_sign_in() -> Result<HttpResponse> {
-    // Create the template instance with dynamic data
-    let template = serve_types::ProblemTemplate {
-        logged_in: mock::is_logged_in(),
-        user_initials: mock::user_initials(),
-        problem_name: "Two Sum",
-        problem_description: "Given an array of integers nums and an integer target, return indices of the two numbers such that they add up to target.",
-        problem_hint: "try hintttt",
-        problem_id: 1
-    };
-
-    // Render the template and return as an HTTP response
-    let rendered = template
-        .render()
-        .map_err(|_| actix_web::error::ErrorInternalServerError("Template error"))?;
-
-    Ok(HttpResponse::Ok().content_type("text/html").body(rendered))
-}
 
 pub async fn serve_leaderboard() -> Result<HttpResponse> {
    
     let template = serve_types::LeaderboardTemplate {
         logged_in: mock::is_logged_in(),
-        user_initials: mock::user_initials(),
-        users: mock::get_users()
+        users: mock::get_leaderboard_users()
     };
 
     // Render the template and return as an HTTP response
     let rendered = template
         .render()
-        .map_err(|_| actix_web::error::ErrorInternalServerError("Template error"))?;
+        .map_err(|_| actix_web::error::ErrorInternalServerError("serve_leaderboard : Template error"))?;
 
 
     Ok(HttpResponse::Ok().content_type("text/html").body(rendered))
@@ -101,24 +76,28 @@ pub async fn serve_leaderboard() -> Result<HttpResponse> {
 
 pub async fn serve_profile() -> Result<HttpResponse> {
     // Create the template instance with dynamic data
-    // let template = HomeTemplate {
-
-    // };
+    let template = serve_types::ProfileTemplate {
+        logged_in: mock::is_logged_in(),
+        user: mock::get_user_profile()
+    };
 
     // // Render the template and return as an HTTP response
+    let rendered = template
+        .render()
+        .map_err(|_| actix_web::error::ErrorInternalServerError("serve_profile : Template error"))?;
+
+    Ok(HttpResponse::Ok().content_type("text/html").body(rendered))
+}
+
+
+pub async fn serve_sign_in() -> Result<HttpResponse> {
+    // Create the template instance with dynamic data
+    
+
+    // Render the template and return as an HTTP response
     // let rendered = template
     //     .render()
-    //     .map_err(|_| actix_web::error::ErrorInternalServerError("Template error"))?;
+    //     .map_err(|_| actix_web::error::ErrorInternalServerError("serve_sign_in: Template error"))?;
 
     Ok(HttpResponse::Ok().content_type("text/html").body("rendered"))
 }
-
-// pub async fn serve_problems() -> Result<HttpResponse> {
-//     // Create the template instance with dynamic data
-//     let template = HomeTemplate { quote: "Hello, dynamic world!" };
-
-//     // Render the template and return as an HTTP response
-//     let rendered = template.render().map_err(|_| actix_web::error::ErrorInternalServerError("Template error"))?;
-
-//     Ok(HttpResponse::Ok().content_type("text/html").body(rendered))
-// }

@@ -22,12 +22,12 @@
     <tbody>
       {% for problem in problems %}
       <tr>
-        <td>{{problem.id}}</td>
-        <td> <a href="{{problem.link}}"> {{problem.name}} </a> </td>
+        <td>{{problem.number}}</td>
+        <td> <a href="problem/{{problem.number}}"> {{problem.name}} </a> </td>
         <td>{{problem.tags}}</td>
         <td>{{problem.difficulty}}</td>
         <td>{{problem.solvers}}</td>
-        <td>{{problem.date}}</td>
+        <td>{{problem.created_at}}</td>
       </tr>
       {% endfor %}
 
