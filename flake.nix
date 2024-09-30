@@ -1,87 +1,31 @@
 {
-  description = "A devShell for Rust";
+  description = "A very basic flake for macOS";
 
+  # Inputs section: Define nixpkgs and rust-overlay
   inputs = {
-    nixpkgs.url      = "github:NixOS/nixpkgs/nixos-unstable";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-23.05-darwin";
     rust-overlay.url = "github:oxalica/rust-overlay";
-    flake-parts.url = "github:hercules-ci/flake-parts";
-
-    # Services flake
-    process-compose-flake.url = "github:Platonic-Systems/process-compose-flake";
-    services-flake.url = "github:juspay/services-flake";
   };
 
-  outputs = inputs:
-    inputs.flake-parts.lib.mkFlake { inherit inputs; } {
-      systems = [ "aarch64-darwin" "x86_64-linux" ];
-
-      imports = [
-        inputs.process-compose-flake.flakeModule
-      ];
-      perSystem = { self', pkgs, system, ... }: {
-        _module.args.pkgs = import inputs.nixpkgs {
-          inherit system;
-          overlays = [ inputs.rust-overlay.overlays.default ];
-        };
-
-        process-compose."services" = {
-            imports = [
-              inputs.services-flake.processComposeModules.default
-            ];
-
-            services.postgres."pg1" = {
-              enable = true;
-              # initialDatabases = [
-              #   {
-              #     name = dbName;
-              #     schemas = [ "${inputs.northwind}/northwind.sql" ];
-              #   }
-              # ];
-            };
-        };
-
-        devShells.default = with pkgs; mkShell {
-          buildInputs = [
-            openssl
-            pkg-config
-            eza
-            fd
-            rust-bin.beta.latest.default
-            postgresql
-          ];
-
-          shellHook = ''
-            alias ls=eza
-            alias find=fd
-          '';
-        };
-
+  # Outputs section: Define the devShell
+  outputs = { self, nixpkgs, rust-overlay }: {
+    # Define the devShell for aarch64-darwin (macOS)
+    devShell.aarch64-darwin = let
+      # Import nixpkgs and apply the rust-overlay
+      pkgs = import nixpkgs {
+        system = "aarch64-darwin";
+        overlays = [ (import rust-overlay) ];  # Apply the rust-overlay
       };
+    in pkgs.mkShell {
+      pure = true;
+      buildInputs = with pkgs; [
+        (pkgs.rust-bin.stable."1.78.0".default)
+      ];
 
-
+      
+      shellHook = ''
+        echo "Entered nix shell for univ rust project..."
+      '';
     };
-    #   let
-    #     overlays = [ (import rust-overlay) ];
-    #     pkgs = import nixpkgs {
-    #       inherit system overlays;
-    #     };
-    #   in
-    #   {
-    #     devShells.default = with pkgs; mkShell {
-    #       buildInputs = [
-    #         openssl
-    #         pkg-config
-    #         eza
-    #         fd
-    #         rust-bin.beta.latest.default
-    #         postgresql
-    #       ];
-
-    #       shellHook = ''
-    #         alias ls=eza
-    #         alias find=fd
-    #       '';
-    #     };
-    #   }
-    # );
+  };
 }
