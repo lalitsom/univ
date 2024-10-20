@@ -11,7 +11,7 @@ async fn main() -> std::io::Result<()> {
 
     dotenv().ok();
 
-    let port: u16 = env::var("PORT").ok().and_then(|s| s.parse().ok()).unwrap_or(8080);                
+    let port: u16 = env::var("PORT").ok().and_then(|s| s.parse().ok()).unwrap_or(8090);                
 
     println!("Starting Server at port {}", port);
     HttpServer::new(|| {
