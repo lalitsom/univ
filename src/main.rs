@@ -2,11 +2,18 @@ mod serve;
 mod mock;
 mod serve_types;
 
+use dotenv::dotenv;
+use std::env;
 use actix_web::{web, App, HttpServer};
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
-    println!("Starting Server at port 8080...");
+
+    dotenv().ok();
+
+    let port: u16 = env::var("PORT").ok().and_then(|s| s.parse().ok()).unwrap_or(8080);                
+
+    println!("Starting Server at port {}", port);
     HttpServer::new(|| {
         App::new()
             .route("/static/{filename:.*}", web::get().to(serve::serve_static_file)) // Serve static files (CSS, JS, images, etc.)
@@ -21,7 +28,7 @@ async fn main() -> std::io::Result<()> {
             .route("/leaderboard", web::get().to(serve::serve_leaderboard)) // Leaderboard page
             .route("/signIn", web::get().to(serve::serve_sign_in)) // Sign in page
     })
-    .bind(("127.0.0.1", 8080))?
+    .bind(("0.0.0.0", port))?
     .run()
     .await
 }
