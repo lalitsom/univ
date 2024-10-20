@@ -31,5 +31,6 @@
     {
       devShell.aarch64-darwin = forSystem "aarch64-darwin";
       devShell.aarch64-linux = forSystem "aarch64-linux";
+      devShell.x86_64-linux = forSystem "x86_64-linux";
     };
 }
