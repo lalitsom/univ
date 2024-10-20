@@ -3,29 +3,33 @@
 
   # Inputs section: Define nixpkgs and rust-overlay
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-23.05-darwin";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
     rust-overlay.url = "github:oxalica/rust-overlay";
   };
 
-  # Outputs section: Define the devShell
-  outputs = { self, nixpkgs, rust-overlay }: {
-    # Define the devShell for aarch64-darwin (macOS)
-    devShell.aarch64-darwin = let
-      # Import nixpkgs and apply the rust-overlay
-      pkgs = import nixpkgs {
-        system = "aarch64-darwin";
-        overlays = [ (import rust-overlay) ];  # Apply the rust-overlay
+  outputs = { self, nixpkgs, rust-overlay }:
+    let
+      forSystem = system: let
+        pkgs = import nixpkgs {
+          inherit system;
+          overlays = [ (import rust-overlay) ];
+        };
+      in pkgs.mkShell {
+        pure = true;
+        buildInputs = with pkgs; [
+          (pkgs.rust-bin.stable."1.78.0".default)
+        ] ++ (if pkgs.stdenv.isDarwin then
+          [ ]
+        else
+          []);
+        shellHook = ''
+          export PS1="(univ-nix-shell) $PS1"
+          echo "Entered nix shell for univ rust project .. "
+          '';
       };
-    in pkgs.mkShell {
-      pure = true;
-      buildInputs = with pkgs; [
-        (pkgs.rust-bin.stable."1.78.0".default)
-      ];
-
-      
-      shellHook = ''
-        echo "Entered nix shell for univ rust project..."
-      '';
+    in
+    {
+      devShell.aarch64-darwin = forSystem "aarch64-darwin";
+      devShell.aarch64-linux = forSystem "aarch64-linux";
     };
-  };
 }
