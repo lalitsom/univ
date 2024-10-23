@@ -1,5 +1,8 @@
 pub use askama::Template;
 
+use std::sync::Mutex;
+use oauth2::basic::BasicClient;
+
 // Define the Askama template for dynamic pages
 #[derive(Template)]
 #[template(path = "index.html")] // Specify the path to the HTML template
@@ -61,4 +64,8 @@ pub struct Problem {
     pub solvers: i32,
     pub created_at: String,
     pub updated_at: String,
+}
+
+pub struct AppState {
+    pub oauth_client: Mutex<BasicClient>,
 }

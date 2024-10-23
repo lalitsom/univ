@@ -16,12 +16,13 @@
         };
       in pkgs.mkShell {
         pure = true;
-        buildInputs = with pkgs; [
-          (pkgs.rust-bin.stable."1.78.0".default)
-        ] ++ (if pkgs.stdenv.isDarwin then
-          [ ]
-        else
-          []);
+        buildInputs = with pkgs.darwin.apple_sdk; [
+            frameworks.CoreFoundation
+            frameworks.CoreServices
+            frameworks.SystemConfiguration
+            pkgs.rust-bin.stable."1.78.0".default
+          ];
+        
         shellHook = ''
           export PS1="(univ-nix-shell) $PS1"
           echo "Entered nix shell for univ rust project .. "
