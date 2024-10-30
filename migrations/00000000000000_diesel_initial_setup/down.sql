@@ -4,3 +4,7 @@
 
 DROP FUNCTION IF EXISTS diesel_manage_updated_at(_tbl regclass);
 DROP FUNCTION IF EXISTS diesel_set_updated_at();
+
+DROP Table IF EXISTS attempted_problems;
+DROP Table IF EXISTS users;
+DROP Table IF EXISTS problems;

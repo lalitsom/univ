@@ -39,46 +39,46 @@ $$ LANGUAGE plpgsql;
 
 -- application specific tables
 
-CREATE TABLE Users (
+CREATE TABLE users (
     id SERIAL PRIMARY KEY,
     username VARCHAR(100) NOT NULL UNIQUE,
     email VARCHAR(255) NOT NULL UNIQUE,
-    createdAt TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    updatedAt TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 -- Indexes
-CREATE INDEX idx_users_username ON Users (username);
-CREATE INDEX idx_users_email ON Users (email);
+CREATE INDEX idx_users_username ON users (username);
+CREATE INDEX idx_users_email ON users (email);
 
 
-CREATE TABLE attemptedProblem (
+CREATE TABLE attempted_problems (
     id SERIAL PRIMARY KEY,
-    userId INT REFERENCES Users(id) ON DELETE CASCADE,
-    problemId INT REFERENCES Problems(id) ON DELETE CASCADE,
-    isSolved BOOLEAN NOT NULL DEFAULT FALSE,
-    createdAt TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    updatedAt TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+    userId INT NOT NULL,
+    problemId INT NOT NULL,
+    is_solved BOOLEAN NOT NULL DEFAULT FALSE,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 -- Indexes
-CREATE INDEX idx_attemptedProblem_userId ON attemptedProblem (userId);
-CREATE INDEX idx_attemptedProblem_problemId ON attemptedProblem (problemId);
-CREATE INDEX idx_attemptedProblem_isSolved ON attemptedProblem (isSolved);
+CREATE INDEX idx_attempted_problems_userId ON attempted_problems (userId);
+CREATE INDEX idx_attempted_problems_problemId ON attempted_problems (problemId);
+CREATE INDEX idx_attempted_problems_is_solved ON attempted_problems (is_solved);
 
 
-CREATE TABLE Problems (
+CREATE TABLE problems (
     id SERIAL PRIMARY KEY,
     problem_statement TEXT NOT NULL,
-    tags VARCHAR(255)[],
-    difficulty INT CHECK (difficulty BETWEEN 1 AND 5),
+    tags TEXT NOT NULL,
+    difficulty INT NOT NULL,
     hint TEXT,
     answer VARCHAR(255) NOT NULL,
-    solvedCount INT DEFAULT 0,
-    createdAt TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    updatedAt TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+    solved_count INT NOT NULL DEFAULT 0,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 -- Indexes
-CREATE INDEX idx_problems_difficulty ON Problems (difficulty);
-CREATE INDEX idx_problems_solvedCount ON Problems (solvedCount);
+CREATE INDEX idx_problems_difficulty ON problems (difficulty);
+CREATE INDEX idx_problems_solved_count ON problems (solved_count);
