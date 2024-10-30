@@ -18,6 +18,8 @@
         pure = true;
         buildInputs = with pkgs; [
           (pkgs.rust-bin.stable."1.78.0".default)
+          pkgs.postgresql_16
+          pkgs.diesel-cli
         ] ++ (if pkgs.stdenv.isDarwin then
           [ ]
         else

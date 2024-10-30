@@ -54,7 +54,7 @@ pub struct Problem {
     pub id: i32,
     pub number: i32,
     pub name: String,
-    pub description: String,
+    pub problem_statement: String,
     pub hint: String,
     pub tags: String,
     pub difficulty: String,
