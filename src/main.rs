@@ -1,20 +1,26 @@
 mod serve;
 mod mock;
 mod serve_types;
+mod storage;
+mod global_state;
+
+use storage::model;
+use storage::schema;
+
 
 use dotenv::dotenv;
 use std::env;
 use actix_web::{web, App, HttpServer};
 
+
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
 
     dotenv().ok();
-
     let port: u16 = env::var("PORT").ok().and_then(|s| s.parse().ok()).unwrap_or(8070);                
 
     println!("Starting Server at port {}", port);
-    HttpServer::new(|| {
+    HttpServer::new(move || {
         App::new()
             .route("/static/{filename:.*}", web::get().to(serve::serve_static_file)) // Serve static files (CSS, JS, images, etc.)
             // .route("/api/", web::get().to(serve_apis)) // user apis

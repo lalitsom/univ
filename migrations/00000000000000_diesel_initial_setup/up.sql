@@ -54,7 +54,7 @@ CREATE INDEX idx_users_email ON users (email);
 
 CREATE TABLE attempted_problems (
     id SERIAL PRIMARY KEY,
-    userId INT NOT NULL,
+    user_id INT NOT NULL,
     problemId INT NOT NULL,
     is_solved BOOLEAN NOT NULL DEFAULT FALSE,
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -62,13 +62,14 @@ CREATE TABLE attempted_problems (
 );
 
 -- Indexes
-CREATE INDEX idx_attempted_problems_userId ON attempted_problems (userId);
+CREATE INDEX idx_attempted_problems_user_id ON attempted_problems (user_id);
 CREATE INDEX idx_attempted_problems_problemId ON attempted_problems (problemId);
 CREATE INDEX idx_attempted_problems_is_solved ON attempted_problems (is_solved);
 
 
 CREATE TABLE problems (
     id SERIAL PRIMARY KEY,
+    title VARCHAR(255) NOT NULL,
     problem_statement TEXT NOT NULL,
     tags TEXT NOT NULL,
     difficulty INT NOT NULL,
@@ -82,3 +83,16 @@ CREATE TABLE problems (
 -- Indexes
 CREATE INDEX idx_problems_difficulty ON problems (difficulty);
 CREATE INDEX idx_problems_solved_count ON problems (solved_count);
+
+
+--- Basic Data
+
+INSERT INTO problems (title, problem_statement, tags, difficulty, hint, answer) VALUES
+('problem one', 'What is 2 + 2?', 'math', 1, 'Think about it', '4'),
+('problem ab', 'What is 3 + 3?', 'math', 1, 'Think about it', '6'),
+('problem por', 'What is 4 + 4?', 'math', 1, 'Think about it', '8');
+
+
+INSERT INTO users (username, email) VALUES
+('user1', 'user1@gmail.com'),
+('user2', 'user22@gmail.com');

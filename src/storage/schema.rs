@@ -3,7 +3,7 @@
 diesel::table! {
     attempted_problems (id) {
         id -> Int4,
-        userid -> Int4,
+        user_id -> Int4,
         problemid -> Int4,
         is_solved -> Bool,
         created_at -> Timestamp,
@@ -14,6 +14,8 @@ diesel::table! {
 diesel::table! {
     problems (id) {
         id -> Int4,
+        #[max_length = 255]
+        title -> Varchar,
         problem_statement -> Text,
         tags -> Text,
         difficulty -> Int4,

@@ -1,5 +1,6 @@
 use crate::mock;
 use crate::serve_types;
+use crate::storage::db;
 
 use actix_files::NamedFile;
 use askama::Template;
@@ -29,11 +30,13 @@ pub async fn serve_home() -> Result<HttpResponse> {
 
 pub async fn serve_problems() -> Result<HttpResponse> {
     
-
+    println!("serving problem1...");
+    
     let template = serve_types::ProblemsTemplate {
         logged_in: mock::is_logged_in(),
-        problems: mock::get_all_problems()
+        problems: db::get_all_problems().await.map_err(|err| actix_web::error::ErrorInternalServerError(err))?
     };
+    println!("serving problem...");
 
     // Render the template and return as an HTTP response
     let rendered = template
@@ -46,7 +49,7 @@ pub async fn serve_problems() -> Result<HttpResponse> {
 pub async fn serve_problem() -> Result<HttpResponse> {
     let template = serve_types::ProblemTemplate {
         logged_in: mock::is_logged_in(),
-        problem: mock::get_problem()
+        problem: db::get_one_problem(1).await.map_err(|err| actix_web::error::ErrorInternalServerError(err))?
     };
 
     // Render the template and return as an HTTP response
@@ -62,7 +65,7 @@ pub async fn serve_leaderboard() -> Result<HttpResponse> {
    
     let template = serve_types::LeaderboardTemplate {
         logged_in: mock::is_logged_in(),
-        users: mock::get_leaderboard_users()
+        users: db::get_leaderboard_users().await.map_err(|err| actix_web::error::ErrorInternalServerError(err))?
     };
 
     // Render the template and return as an HTTP response
@@ -78,7 +81,7 @@ pub async fn serve_profile() -> Result<HttpResponse> {
     // Create the template instance with dynamic data
     let template = serve_types::ProfileTemplate {
         logged_in: mock::is_logged_in(),
-        user: mock::get_user_profile()
+        user: db::get_user_profile(1).await.map_err(|err| actix_web::error::ErrorInternalServerError(err))?
     };
 
     // // Render the template and return as an HTTP response
