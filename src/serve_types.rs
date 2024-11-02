@@ -1,5 +1,5 @@
-pub use askama::Template;
 use crate::storage::model::{Problem, User};
+pub use askama::Template;
 
 // Define the Askama template for dynamic pages
 #[derive(Template)]

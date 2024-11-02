@@ -13,19 +13,19 @@
 
 
 
-  <div class="container mt-3">
-    <!-- Problem Statement -->
-    <div class="card">
-      <div class="card-body">
-        <h3 class="card-title">{{problem.title}}</h3>
-        <p class="card-text">
-          {{problem.problem_statement}}
-        </p>
-      </div>
+<div class="container mt-3">
+  <!-- Problem Statement -->
+  <div class="card">
+    <div class="card-body">
+      <h3 class="card-title">{{problem.title}}</h3>
+      <p class="card-text">
+        {{problem.problem_statement}}
+      </p>
     </div>
-  
-   <!-- Input Field and Submit Button -->
-   <div class="d-flex justify-content-center mt-4">
+  </div>
+
+  <!-- Input Field and Submit Button -->
+  <div class="d-flex justify-content-center mt-4">
     <input type="number" class="form-control w-50" id="inputNumber" placeholder="Enter your answer">
   </div>
   <div class="d-flex justify-content-center mt-2">
@@ -34,7 +34,8 @@
 
   <!-- Collapsible Hint -->
   <div class="mt-4">
-    <button class="btn btn-sm btn-outline-primary" type="button" data-bs-toggle="collapse" data-bs-target="#hint" aria-expanded="false" aria-controls="hint">
+    <button class="btn btn-sm btn-outline-primary" type="button" data-bs-toggle="collapse" data-bs-target="#hint"
+      aria-expanded="false" aria-controls="hint">
       Show Hint
     </button>
     <div class="collapse mt-2" id="hint">
@@ -44,7 +45,7 @@
     </div>
   </div>
 </div>
-  
+
 
 {% include "common/foot.html" %}
 

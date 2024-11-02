@@ -1,9 +1,9 @@
 // src/models.rs
 
+use crate::schema::{attempted_problems, problems, users};
+use chrono::NaiveDateTime;
 use diesel::prelude::*;
 use serde::Serialize;
-use crate::schema::{users, problems, attempted_problems};
-use chrono::NaiveDateTime;
 
 #[derive(Queryable, Insertable, Serialize, Debug)]
 #[diesel(table_name = users)]
@@ -21,7 +21,7 @@ pub struct Problem {
     pub id: i32,
     pub title: String,
     pub problem_statement: String,
-    pub tags: String,  // TEXT type for tags as defined in schema.rs
+    pub tags: String, // TEXT type for tags as defined in schema.rs
     pub difficulty: i32,
     pub hint: Option<String>,
     pub answer: String,
@@ -40,7 +40,6 @@ pub struct AttemptedProblem {
     pub created_at: NaiveDateTime,
     pub updated_at: NaiveDateTime,
 }
-
 
 impl Problem {
     // Method to get hint as a String with a default if None

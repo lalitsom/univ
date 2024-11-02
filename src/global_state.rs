@@ -26,18 +26,18 @@ use crate::storage::conn;
 
 #[derive(Debug)]
 pub struct GlobalState {
-  pub db_pool: conn::DbPool
+    pub db_pool: conn::DbPool,
 }
 
 impl GlobalState {
-  pub async fn new() -> GlobalState {
-    GlobalState {
-      db_pool: conn::initialize_db_pool().clone()
+    pub async fn new() -> GlobalState {
+        GlobalState {
+            db_pool: conn::initialize_db_pool().clone(),
+        }
     }
-  }
 }
 
 pub async fn get_global_state() -> &'static GlobalState {
-  static GLOBAL_STATE: OnceCell<GlobalState> = OnceCell::const_new();
-  GLOBAL_STATE.get_or_init(|| GlobalState::new()).await
+    static GLOBAL_STATE: OnceCell<GlobalState> = OnceCell::const_new();
+    GLOBAL_STATE.get_or_init(|| GlobalState::new()).await
 }

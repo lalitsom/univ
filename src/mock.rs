@@ -3,18 +3,16 @@
 // use rand::Rng;
 // use rand::distributions::Alphanumeric;
 
-
 pub fn is_logged_in() -> bool {
     true
 }
-
 
 // pub fn get_all_problems() -> Vec<Problem> {
 
 //     let mut problems : Vec<Problem> = Vec::new();
 
 //     for _ in 0..15 {
-        
+
 //         let random_number = rand::thread_rng().gen_range(1..101);
 //         let levels = ["Easy", "Medium", "Hard"];
 //         let tags = ["Array", "Hash Table", "String", "Math", "Two Pointers", "Binary Search", ];
@@ -45,16 +43,12 @@ pub fn is_logged_in() -> bool {
 //     problems
 // }
 
-
-
-
-
 // pub fn get_leaderboard_users() -> Vec<User> {
 
 //     let mut users : Vec<User> = Vec::new();
 
 //     for _ in 0..20 {
-        
+
 //         let random_number = rand::thread_rng().gen_range(1..101);
 
 //         let random_string: String = rand::thread_rng()
@@ -80,7 +74,6 @@ pub fn is_logged_in() -> bool {
 //     users
 // }
 
-
 // pub fn get_user_profile() -> User {
 //     let random_number = rand::thread_rng().gen_range(1..101);
 
@@ -101,7 +94,7 @@ pub fn is_logged_in() -> bool {
 //         created_at: random_date.clone(),
 //         updated_at: random_date.clone()
 //     };
-    
+
 //     user
 // }
 
