@@ -21,7 +21,10 @@
           pkgs.postgresql_16
           pkgs.diesel-cli
         ] ++ (if pkgs.stdenv.isDarwin then
-          [ ]
+          [ pkgs.darwin.apple_sdk.frameworks.CoreFoundation
+            pkgs.darwin.apple_sdk.frameworks.CoreServices
+            pkgs.darwin.apple_sdk.frameworks.SystemConfiguration
+            ]
         else
           []);
         shellHook = ''

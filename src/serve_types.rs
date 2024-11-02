@@ -35,31 +35,3 @@ pub struct ProfileTemplate {
     pub logged_in: bool,
     pub user: User,
 }
-
-// storage types for the mock data
-
-// #[derive(Clone)]
-// pub struct User {
-//     pub id: i32,
-//     pub name: String,
-//     pub email: String,
-//     pub attempted: i32,
-//     pub solved: i32,
-//     pub rank: i32,
-//     pub created_at: String,
-//     pub updated_at: String,
-// }
-
-// #[derive(Clone)]
-// pub struct Problem {
-//     pub id: i32,
-//     pub number: i32,
-//     pub name: String,
-//     pub problem_statement: String,
-//     pub hint: String,
-//     pub tags: String,
-//     pub difficulty: String,
-//     pub solvers: i32,
-//     pub created_at: String,
-//     pub updated_at: String,
-// }

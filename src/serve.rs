@@ -1,11 +1,11 @@
 use crate::mock;
 use crate::serve_types;
 use crate::storage::db;
+use crate::oauth;
 
 use actix_files::NamedFile;
+use actix_web::{web, HttpRequest, HttpResponse, Result, Responder};
 use askama::Template;
-
-use actix_web::{web, HttpRequest, HttpResponse, Result};
 
 // Serve static files like CSS
 pub async fn serve_static_file(path: web::Path<String>) -> Result<NamedFile> {
@@ -111,17 +111,27 @@ pub async fn serve_profile() -> Result<HttpResponse> {
     Ok(HttpResponse::Ok().content_type("text/html").body(rendered))
 }
 
-pub async fn serve_sign_in() -> Result<HttpResponse> {
-    // Create the template instance with dynamic data
+// pub async fn serve_sign_in() -> Result<HttpResponse> {
+//     // Create the template instance with dynamic data
 
-    // Render the template and return as an HTTP response
-    // let rendered = template
-    //     .render()
-    //     .map_err(|_| actix_web::error::ErrorInternalServerError("serve_sign_in: Template error"))?;
+//     // Render the template and return as an HTTP response
+//     // let rendered = template
+//     //     .render()
+//     //     .map_err(|_| actix_web::error::ErrorInternalServerError("serve_sign_in: Template error"))?;
 
-    Ok(HttpResponse::Ok()
-        .content_type("text/html")
-        .body("rendered"))
+//     Ok(HttpResponse::Ok()
+//         .content_type("text/html")
+//         .body("rendered"))
+// }
+
+pub async fn serve_sign_in() -> impl Responder {
+
+    let auth_url = oauth::get_authorize_url();
+
+    // Redirect the user to Google OAuth
+    HttpResponse::Found()
+        .insert_header(("Location", auth_url))
+        .finish()
 }
 
 // apis without html
