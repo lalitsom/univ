@@ -27,6 +27,7 @@ async fn main() -> std::io::Result<()> {
                 web::get().to(serve::serve_static_file),
             ) // Serve static files (CSS, JS, images, etc.)
             // .route("/api/", web::get().to(serve_apis)) // user apis
+            .route("/api/check_answer/{problemId}/{answer}", web::get().to(serve::check_answer))
             // .route("/admin/", web::get().to(serve_admin_apis)) // admin apis
             // serve dynamic html pages
             .route("/", web::get().to(serve::serve_home)) // Home page

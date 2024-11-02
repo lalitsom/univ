@@ -123,3 +123,34 @@ pub async fn serve_sign_in() -> Result<HttpResponse> {
         .content_type("text/html")
         .body("rendered"))
 }
+
+// apis without html
+
+pub async fn check_answer(req: HttpRequest) -> Result<HttpResponse> {
+    // problem/{problemId}/{answer}
+    // extract id from request
+
+    // get problemId and answer from request
+    let problem_id = req
+        .match_info()
+        .get("problemId")
+        .and_then(|id| id.parse::<i32>().ok());
+
+    let ans = req.match_info().get("answer").map(|s| s.to_string());
+
+    match (problem_id, ans) {
+        (Some(problem_id), Some(ans)) => {
+            // Successfully parsed problem_id as an integer, use it as needed
+
+            let result = db::check_answer(problem_id, ans)
+                .await
+                .map_err(|err| actix_web::error::ErrorInternalServerError(err))?;
+
+            Ok(HttpResponse::Ok().json(result))
+        }
+        _ => {
+            // Handle the case where problemId is missing or invalid
+            Ok(HttpResponse::Ok().json("Bad request"))
+        }
+    }
+}

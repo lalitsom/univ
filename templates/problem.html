@@ -26,10 +26,12 @@
 
   <!-- Input Field and Submit Button -->
   <div class="d-flex justify-content-center mt-4">
-    <input type="number" class="form-control w-50" id="inputNumber" placeholder="Enter your answer">
+    <input type="number" class="form-control w-50" id="inputNumber"
+      onkeydown="if(event.key === 'Enter'){ document.getElementById('submitButton').click(); return false; }"
+      data-problem_id="{{problem.id}}" placeholder="Enter your answer..">
   </div>
   <div class="d-flex justify-content-center mt-2">
-    <button type="button" class="btn btn-primary" onclick="submitSolution()">Check</button>
+    <button type="button" class="btn btn-primary" id="submitButton" onclick="submitSolution()">Check</button>
   </div>
 
   <!-- Collapsible Hint -->
@@ -50,5 +52,23 @@
 {% include "common/foot.html" %}
 
 </body>
+
+<script>
+  function submitSolution() {
+    let inputNumber = document.getElementById("inputNumber").value;
+    let problemId = document.getElementById("inputNumber").getAttribute("data-problem_id");
+    let url = `/api/check_answer/${problemId}/${inputNumber}`;
+
+    fetch(url)
+      .then(response => response.json())
+      .then(data => {
+        if (data === true) {
+          alert("Correct Answer!");
+        } else {
+          alert("Incorrect Answer!");
+        }
+      });
+  }
+</script>
 
 </html>

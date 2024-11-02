@@ -46,3 +46,13 @@ pub async fn get_leaderboard_users() -> Result<Vec<User>, Error> {
         .expect("couldn't get db connection from pool");
     users.load::<User>(&mut conn)
 }
+
+pub async fn check_answer(problem_id: i32, ans: String) -> Result<bool, Error> {
+    let state = GS::get_global_state().await;
+    let mut conn = state
+        .db_pool
+        .get()
+        .expect("couldn't get db connection from pool");
+    let problem = problems.find(problem_id).first::<Problem>(&mut conn)?;
+    Ok(problem.answer.parse::<i32>() == ans.parse::<i32>())
+}
