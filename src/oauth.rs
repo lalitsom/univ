@@ -1,15 +1,23 @@
 use oauth2::basic::BasicClient;
+use oauth2::reqwest::async_http_client;
 use std::env;
-// use oauth2::reqwest::async_http_client;
 // use oauth2::CsrfToken;
-use oauth2::{AuthUrl, ClientId, ClientSecret, RedirectUrl, TokenUrl, CsrfToken, Scope};
+use oauth2::{
+    AuthUrl, AuthorizationCode, ClientId, ClientSecret, CsrfToken, RedirectUrl, Scope, TokenUrl, TokenResponse
+};
 // use reqwest::Client;
-// use serde::Deserialize;
+use serde::Deserialize;
 
 // use oauth2::{
 //     AuthUrl, AuthorizationCode, ClientId, ClientSecret, EmptyExtraTokenFields, RedirectUrl, Scope,
 //     StandardTokenResponse, TokenResponse, TokenUrl, CsrfToken
 // };
+
+#[derive(Debug, Deserialize)]
+pub struct OAuthRequest {
+    pub code: String,
+    pub state: String,
+}
 
 pub fn initialize_oauth_client() -> BasicClient {
     let client_id = ClientId::new(env::var("GOOGLE_CLIENT_ID").expect("Missing client ID"));
@@ -21,7 +29,7 @@ pub fn initialize_oauth_client() -> BasicClient {
         .expect("Invalid Token URL");
 
     let redirect_url =
-        RedirectUrl::new("https://7b81-27-4-59-212.ngrok-free.app/oauth2callback".to_string())
+        RedirectUrl::new(env::var("OAUTH2_CALLBACK_URL").expect("Missing redirect url"))
             .expect("Invalid Redirect URL");
 
     let oauth_client = BasicClient::new(client_id, Some(client_secret), auth_url, Some(token_url))
@@ -35,11 +43,57 @@ pub fn get_authorize_url() -> String {
 
     // Generate the authorization URL and CSRF token
     let (auth_url, _csrf_token) = client
-        .authorize_url(CsrfToken::new_random)
-        .add_scope(Scope::new(
-            "https://www.googleapis.com/auth/userinfo.profile".to_string(),
-        ))
+        .authorize_url(CsrfToken::new_random).add_extra_param("prompt", "select_account")
+        .add_scope(Scope::new("email".into()))
         .url();
 
     auth_url.to_string()
+}
+
+pub async fn handle_oauth2callback(
+    query_code: String,
+) -> Result<serde_json::Value, Box<dyn std::error::Error>> {
+    let client = initialize_oauth_client();
+
+    // Exchange the code with a token
+    let token_result = client
+        .exchange_code(AuthorizationCode::new(query_code))
+        .request_async(async_http_client)
+        .await;
+
+    match token_result {
+        Ok(token) => {
+            let access_token = token.access_token().secret();
+            // Get the user info
+            let user_info = reqwest::get(
+                "https://www.googleapis.com/oauth2/v1/userinfo?alt=json&access_token=".to_string()
+                    + &access_token,
+            )
+            .await?
+            .json::<serde_json::Value>()
+            .await?;
+
+            println!("{:?}", user_info);
+
+            // return user_info
+
+            Ok(user_info)
+        }
+        Err(e) => Err(Box::new(e)),
+    }
+    
+
+    // let access_token = token.access_token().secret();
+    // // Get the user info
+    // let user_info = reqwest::blocking::get(
+    //     "https://www.googleapis.com/oauth2/v1/userinfo?alt=json&access_token=".to_string()
+    //         + &access_token,
+    // )
+    // .expect("Failed to get user info")
+    // .json::<serde_json::Value>()
+    // .expect("Failed to parse user info");
+
+    // println!("{:?}", user_info);
+
+    // Ok("".to_string())
 }

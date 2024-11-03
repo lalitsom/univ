@@ -3,9 +3,9 @@
 // use rand::Rng;
 // use rand::distributions::Alphanumeric;
 
-pub fn is_logged_in() -> bool {
-    false
-}
+// pub fn is_logged_in() -> bool {
+//     false
+// }
 
 // pub fn get_all_problems() -> Vec<Problem> {
 

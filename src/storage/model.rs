@@ -4,6 +4,7 @@ use crate::schema::{attempted_problems, problems, users};
 use chrono::NaiveDateTime;
 use diesel::prelude::*;
 use serde::Serialize;
+use diesel::Insertable;
 
 #[derive(Queryable, Insertable, Serialize, Debug)]
 #[diesel(table_name = users)]
@@ -14,6 +15,17 @@ pub struct User {
     pub created_at: NaiveDateTime,
     pub updated_at: NaiveDateTime,
 }
+
+#[derive(Insertable)]
+#[diesel(table_name = users)]
+pub struct NewUser<'a> {
+    pub username: &'a str,
+    pub email: &'a str,
+    // exclude fields like `id` and `created_at` that have defaults
+}
+
+
+
 
 #[derive(Queryable, Insertable, Serialize, Debug)]
 #[diesel(table_name = problems)]
