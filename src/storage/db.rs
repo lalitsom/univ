@@ -155,3 +155,4 @@ pub async fn check_already_solved(email_: &str, problem_id_: i32) -> Result<bool
         None => Ok(false),
     }
 }
+

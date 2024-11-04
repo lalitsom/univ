@@ -12,6 +12,7 @@ pub struct User {
     pub id: i32,
     pub username: String,
     pub email: String,
+    pub solved: i32,
     pub created_at: NaiveDateTime,
     pub updated_at: NaiveDateTime,
 }
@@ -70,14 +71,14 @@ impl Problem {
         self.hint.as_deref().unwrap_or("No hint available")
     }
 
-    pub fn timestamp_to_date(&self) -> String {
+    pub fn created_ts_show(&self) -> String {
         self.created_at.format("%Y-%m-%d").to_string()
     }
 }
 
 
 impl User {
-    pub fn timestamp_to_date(&self) -> String {
+    pub fn created_ts_show(&self) -> String {
         self.created_at.format("%Y-%m-%d").to_string()
     }
 }
