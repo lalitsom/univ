@@ -69,4 +69,15 @@ impl Problem {
     pub fn hint_or_default(&self) -> &str {
         self.hint.as_deref().unwrap_or("No hint available")
     }
+
+    pub fn timestamp_to_date(&self) -> String {
+        self.created_at.format("%Y-%m-%d").to_string()
+    }
+}
+
+
+impl User {
+    pub fn timestamp_to_date(&self) -> String {
+        self.created_at.format("%Y-%m-%d").to_string()
+    }
 }

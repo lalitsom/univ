@@ -29,10 +29,10 @@
       <tr>
         <td>{{problem.id}}</td>
         <td> <a href="problem/{{problem.id}}"> {{problem.problem_statement}} </a> </td>
-        <td>{{problem.tags}}</td>
+        <td><span class="badge bg-secondary">{{problem.tags}}</span></td>
         <!-- <td>{{problem.difficulty}}</td> -->
         <td>{{problem.solved_count}}</td>
-        <td>{{problem.created_at}}</td>
+        <td>{{problem.timestamp_to_date()}}</td>
       </tr>
       {% endfor %}
 
