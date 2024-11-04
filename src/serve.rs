@@ -1,7 +1,6 @@
 use crate::oauth;
 use crate::serve_types;
 use crate::storage::db;
-
 use actix_files::NamedFile;
 use actix_session::Session;
 use actix_web::{web, HttpRequest, HttpResponse, Responder, Result};
@@ -61,6 +60,7 @@ pub async fn serve_problem(session: Session, req: HttpRequest) -> Result<HttpRes
         .get::<String>("user_token")
         .unwrap_or(None)
         .is_some();
+
     match req
         .match_info()
         .get("problemId")
@@ -68,12 +68,22 @@ pub async fn serve_problem(session: Session, req: HttpRequest) -> Result<HttpRes
     {
         Some(problem_id) => {
             // Successfully parsed problem_id as an integer, use it as needed
+            let mut already_solved = false;
+            if user_token_exists{
+                let user_email_: String = session.get::<String>("user_email").unwrap().unwrap();
+                already_solved = db::check_already_solved(&user_email_, problem_id)
+                .await
+                .map_err(|err| actix_web::error::ErrorInternalServerError(err))?;
+            }
+            
+            
 
             let template = serve_types::ProblemTemplate {
                 logged_in: user_token_exists,
                 problem: db::get_one_problem(problem_id)
                     .await
                     .map_err(|err| actix_web::error::ErrorInternalServerError(err))?,
+                already_solved: already_solved
             };
 
             // Render the template and return as an HTTP response
@@ -119,13 +129,13 @@ pub async fn serve_profile(session: Session) -> Result<HttpResponse> {
         .get::<String>("user_token")
         .unwrap_or(None)
         .is_some();
-    let user_email = session.get::<String>("user_email").unwrap().unwrap();
+    let user_email_ = session.get::<String>("user_email").unwrap().unwrap();
 
     // check if user_token exist in session storage
 
     let template = serve_types::ProfileTemplate {
         logged_in: user_token_exists,
-        user: db::get_user_profile(user_email)
+        user: db::get_user_profile(user_email_)
             .await
             .map_err(|err| actix_web::error::ErrorInternalServerError(err))?,
     };
@@ -171,6 +181,13 @@ pub async fn oauth2callback(
             // get username from email by splitting from @
             let user_name: &str = email.split('@').collect::<Vec<&str>>()[0];
 
+            // let org = user_info["hd"].as_str().unwrap();
+            // if org != "juspay.in" {
+            //     return HttpResponse::Found()
+            //     .insert_header(("Location", "/"))
+            //     .finish();
+            // }
+
             let user = db::get_or_create_user(email, user_name)
                 .await
                 .map_err(|err| actix_web::error::ErrorInternalServerError(err));
@@ -204,11 +221,12 @@ pub async fn check_answer(session: Session, req: HttpRequest) -> Result<HttpResp
         .get::<String>("user_token")
         .unwrap_or(None)
         .is_some();
-    let user_email = session.get::<String>("user_email").unwrap().unwrap();
 
     if !user_token_exists {
         return Ok(HttpResponse::Ok().json("Unauthorized"));
     }
+
+    let user_email_ = session.get::<String>("user_email").unwrap().unwrap();
 
     // get problemId and answer from request
     let problem_id = req
@@ -226,7 +244,14 @@ pub async fn check_answer(session: Session, req: HttpRequest) -> Result<HttpResp
                 .await
                 .map_err(|err| actix_web::error::ErrorInternalServerError(err))?;
 
-            let _ = db::insert_attempted_problems(&user_email, problem_id, result).await;
+            let already_solved = db::check_already_solved(&user_email_, problem_id)
+                .await
+                .map_err(|err| actix_web::error::ErrorInternalServerError(err))?;
+
+            let _ = db::insert_attempted_problems(&user_email_, problem_id, result).await;
+            if result && !already_solved {
+                let _ = db::update_problem_solved_count(problem_id).await;
+            }
 
             Ok(HttpResponse::Ok().json(result))
         }

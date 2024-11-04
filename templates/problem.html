@@ -24,15 +24,45 @@
     </div>
   </div>
 
-  <!-- Input Field and Submit Button -->
+
+  <br>
+  <div id="correct-alert"  style="display: none;"  class="alert alert-success" role="alert">
+    Solved! <a href="/problems" class="alert-link">Find more to solve</a>.
+  </div>
+  <div id="incorrect-alert"  style="display: none;"  class="alert alert-danger" role="alert">
+  </div>
+
+  
+  {% if logged_in %}
+
+    {% if already_solved %}
+    <br>
+    <div class="alert alert-success" role="alert">
+      Solved! <a href="/problems" class="alert-link">Find more to solve</a>.
+    </div>
+
+    {% else %}
+
+    <!-- Input Field and Submit Button -->
+    <div id="submit-div">
+    <div class="d-flex justify-content-center mt-4">
+      <input type="number" class="form-control w-50" id="inputNumber"
+        onkeydown="if(event.key === 'Enter'){ document.getElementById('submitButton').click(); return false; }"
+        data-problem_id="{{problem.id}}" placeholder="Enter your answer..">
+    </div>
+    <div class="d-flex justify-content-center mt-2">
+      <button type="button" class="btn btn-primary" id="submitButton" onclick="submitSolution()">Check</button>
+    </div>
+  </div>
+
+    {% endif %}
+  
+  {% else %}
   <div class="d-flex justify-content-center mt-4">
-    <input type="number" class="form-control w-50" id="inputNumber"
-      onkeydown="if(event.key === 'Enter'){ document.getElementById('submitButton').click(); return false; }"
-      data-problem_id="{{problem.id}}" placeholder="Enter your answer..">
+    <a href="/sign_in" class="btn btn-primary">Sign In to Submit Solution</a>
   </div>
-  <div class="d-flex justify-content-center mt-2">
-    <button type="button" class="btn btn-primary" id="submitButton" onclick="submitSolution()">Check</button>
-  </div>
+  {% endif %}
+
 
   <!-- Collapsible Hint -->
   <div class="mt-4">
@@ -54,6 +84,20 @@
 </body>
 
 <script>
+
+  function showSolvedAlert(val) {
+    document.getElementById("incorrect-alert").style.display = "none";
+    document.getElementById("submit-div").style.display = "none";
+    document.getElementById("correct-alert").innerHTML = `correct answer! ${val}`;
+    document.getElementById("correct-alert").style.display = "block";
+  }
+
+  function showIncorrectAlert(val) {
+    document.getElementById("correct-alert").style.display = "none";
+    document.getElementById("incorrect-alert").innerHTML = `Incorrect! ${val}`;
+    document.getElementById("incorrect-alert").style.display = "block";
+  }
+
   function submitSolution() {
     let inputNumber = document.getElementById("inputNumber").value;
     let problemId = document.getElementById("inputNumber").getAttribute("data-problem_id");
@@ -62,11 +106,14 @@
     fetch(url)
       .then(response => response.json())
       .then(data => {
-        console.log(data)
         if (data === true) {
-          alert("Correct Answer!");
-        } else {
-          alert("Incorrect Answer!");
+          showSolvedAlert(inputNumber);
+        } else if (data === false) {
+          showIncorrectAlert(inputNumber);
+        }
+        else if (data === "Unauthorized"){
+          // Redirect to sign out page
+          window.location.href = "/sign_out";
         }
       });
   }

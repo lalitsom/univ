@@ -21,27 +21,26 @@ pub async fn get_all_problems() -> Result<Vec<model::Problem>, Error> {
     problems.load::<model::Problem>(&mut conn)
 }
 
-pub async fn get_one_problem(_problem_id: i32) -> Result<model::Problem, Error> {
+pub async fn get_one_problem(problem_id_: i32) -> Result<model::Problem, Error> {
     let state = GS::get_global_state().await;
     let mut conn = state
         .db_pool
         .get()
         .expect("couldn't get db connection from pool");
-    problems.find(_problem_id).first(&mut conn)
+    problems.find(problem_id_).first(&mut conn)
 }
 
 // model::User queries
 
-pub async fn get_user_profile(_email: String) -> Result<model::User, Error> {
+pub async fn get_user_profile(email_: String) -> Result<model::User, Error> {
     let state = GS::get_global_state().await;
     let mut conn = state
         .db_pool
         .get()
         .expect("couldn't get db connection from pool");
 
-    println!("Email: {}", _email);
     let user = users
-        .filter(email.eq(_email))
+        .filter(email.eq(email_))
         .first::<model::User>(&mut conn)
         .optional()?;
 
@@ -58,19 +57,20 @@ pub async fn get_leaderboard_users() -> Result<Vec<model::User>, Error> {
     users.load::<model::User>(&mut conn)
 }
 
-pub async fn check_answer(_problem_id: i32, _answer: String) -> Result<bool, Error> {
+pub async fn check_answer(problem_id_: i32, answer_: String) -> Result<bool, Error> {
     let state = GS::get_global_state().await;
     let mut conn = state
         .db_pool
         .get()
         .expect("couldn't get db connection from pool");
+    
     let problem = problems
-        .find(_problem_id)
+        .find(problem_id_)
         .first::<model::Problem>(&mut conn)?;
-    Ok(problem.answer.parse::<i32>() == _answer.parse::<i32>())
+    Ok(problem.answer.parse::<i32>() == answer_.parse::<i32>())
 }
 
-pub async fn get_or_create_user(_email: &str, _username: &str) -> Result<model::User, Error> {
+pub async fn get_or_create_user(email_: &str, username_: &str) -> Result<model::User, Error> {
     let state = GS::get_global_state().await;
     let mut conn = state
         .db_pool
@@ -78,7 +78,7 @@ pub async fn get_or_create_user(_email: &str, _username: &str) -> Result<model::
         .expect("couldn't get db connection from pool");
 
     let user = users
-        .filter(email.eq(_email))
+        .filter(email.eq(email_))
         .first::<model::User>(&mut conn)
         .optional()?;
 
@@ -86,8 +86,8 @@ pub async fn get_or_create_user(_email: &str, _username: &str) -> Result<model::
         Some(user) => Ok(user),
         None => {
             let new_user = model::NewUser {
-                username: &_username,
-                email: &_email,
+                username: &username_,
+                email: &email_,
             };
             let inserted_user = diesel::insert_into(users)
                 .values(&new_user)
@@ -99,9 +99,9 @@ pub async fn get_or_create_user(_email: &str, _username: &str) -> Result<model::
 }
 
 pub async fn insert_attempted_problems(
-    _email: &str,
-    _problem_id: i32,
-    _is_solved: bool,
+    email_: &str,
+    problem_id_: i32,
+    is_solved_: bool,
 ) -> Result<(), Error> {
     let state = GS::get_global_state().await;
     let mut conn = state
@@ -110,9 +110,9 @@ pub async fn insert_attempted_problems(
         .expect("couldn't get db connection from pool");
 
     let new_attempted_problem = model::NewAttempt {
-        user_email: _email,
-        problem_id: _problem_id,
-        is_solved: _is_solved,
+        user_email: email_,
+        problem_id: problem_id_,
+        is_solved: is_solved_,
     };
 
     diesel::insert_into(attempted_problems)
@@ -120,4 +120,38 @@ pub async fn insert_attempted_problems(
         .execute(&mut conn)?;
 
     Ok(())
+}
+
+pub async fn update_problem_solved_count(problem_id_: i32) -> Result<(), Error> {
+    let state = GS::get_global_state().await;
+    let mut conn = state
+        .db_pool
+        .get()
+        .expect("couldn't get db connection from pool");
+
+    diesel::update(problems.find(problem_id_))
+        .set(solved_count.eq(solved_count + 1))
+        .execute(&mut conn)?;
+
+    Ok(())
+}
+
+pub async fn check_already_solved(email_: &str, problem_id_: i32) -> Result<bool, Error> {
+    let state = GS::get_global_state().await;
+    let mut conn = state
+        .db_pool
+        .get()
+        .expect("couldn't get db connection from pool");
+
+    let attempted_problem = attempted_problems
+        .filter(user_email.eq(email_))
+        .filter(problem_id.eq(problem_id_))
+        .filter(is_solved.eq(true))
+        .first::<model::AttemptedProblem>(&mut conn)
+        .optional()?;
+
+    match attempted_problem {
+        Some(_attempted_problem) => Ok(true),
+        None => Ok(false),
+    }
 }

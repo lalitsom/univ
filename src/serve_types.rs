@@ -27,6 +27,7 @@ pub struct LeaderboardTemplate {
 pub struct ProblemTemplate {
     pub logged_in: bool,
     pub problem: Problem,
+    pub already_solved: bool,
 }
 
 #[derive(Template)]

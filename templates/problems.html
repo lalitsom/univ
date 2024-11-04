@@ -11,6 +11,7 @@
 <script src="https://cdn.datatables.net/2.1.6/js/dataTables.bootstrap5.js"></script>
 
 <div class="container mt-5">
+  <h3> Problems </h3>
 
   <table id="problemTable" class="table table-striped" style="width:100%">
     <thead>
@@ -18,9 +19,9 @@
         <th>Id</th>
         <th>Problem</th>
         <th>Tags</th>
-        <th>Difficulty</th>
+        <!-- <th>Difficulty</th> -->
         <th>Solvers</th>
-        <th>Date</th>
+        <th>Added</th>
       </tr>
     </thead>
     <tbody>
@@ -29,7 +30,7 @@
         <td>{{problem.id}}</td>
         <td> <a href="problem/{{problem.id}}"> {{problem.problem_statement}} </a> </td>
         <td>{{problem.tags}}</td>
-        <td>{{problem.difficulty}}</td>
+        <!-- <td>{{problem.difficulty}}</td> -->
         <td>{{problem.solved_count}}</td>
         <td>{{problem.created_at}}</td>
       </tr>

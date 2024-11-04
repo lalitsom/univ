@@ -73,10 +73,6 @@ pub async fn handle_oauth2callback(
             .json::<serde_json::Value>()
             .await?;
 
-            println!("{:?}", user_info);
-
-            // return user_info
-
             Ok(user_info)
         }
         Err(e) => Err(Box::new(e)),
