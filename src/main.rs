@@ -23,11 +23,18 @@ async fn main() -> std::io::Result<()> {
         .unwrap_or(8070);
 
     println!("Starting Server at port {}", port);
+
+    let session_key: [u8; 32] = env::var("SESSION_KEY")
+        .unwrap_or_else(|_| "00000000000000000000000000000000".to_string()) // Fallback default key
+        .as_bytes()
+        .try_into()
+        .expect("SESSION_KEY must be exactly 32 bytes long");
+
     HttpServer::new(move || {
         App::new()
             .wrap(
-                CookieSession::signed(&[0; 32])
-                    .secure(false)
+                CookieSession::private(&session_key)
+                    .secure(true) // Only allow over HTTPS
                     .http_only(true)
                     .max_age(86400),
             )

@@ -15,12 +15,14 @@ pub async fn serve_static_file(path: web::Path<String>) -> Result<NamedFile> {
 }
 
 pub async fn serve_home(session: Session) -> Result<HttpResponse> {
-
-    let user_token_exists = session.get::<String>("user_token").unwrap_or(None).is_some();
+    let user_token_exists = session
+        .get::<String>("user_token")
+        .unwrap_or(None)
+        .is_some();
 
     // Create the template instance with dynamic data
     let template = serve_types::HomeTemplate {
-        logged_in: user_token_exists
+        logged_in: user_token_exists,
     };
 
     // Render the template and return as an HTTP response
@@ -32,9 +34,10 @@ pub async fn serve_home(session: Session) -> Result<HttpResponse> {
 }
 
 pub async fn serve_problems(session: Session) -> Result<HttpResponse> {
-
-
-    let user_token_exists = session.get::<String>("user_token").unwrap_or(None).is_some();
+    let user_token_exists = session
+        .get::<String>("user_token")
+        .unwrap_or(None)
+        .is_some();
     let template = serve_types::ProblemsTemplate {
         logged_in: user_token_exists,
         problems: db::get_all_problems()
@@ -54,7 +57,10 @@ pub async fn serve_problem(session: Session, req: HttpRequest) -> Result<HttpRes
     // problem/id
     // extract id from request
 
-    let user_token_exists = session.get::<String>("user_token").unwrap_or(None).is_some();
+    let user_token_exists = session
+        .get::<String>("user_token")
+        .unwrap_or(None)
+        .is_some();
     match req
         .match_info()
         .get("problemId")
@@ -87,9 +93,10 @@ pub async fn serve_problem(session: Session, req: HttpRequest) -> Result<HttpRes
 }
 
 pub async fn serve_leaderboard(session: Session) -> Result<HttpResponse> {
-
-
-    let user_token_exists = session.get::<String>("user_token").unwrap_or(None).is_some();
+    let user_token_exists = session
+        .get::<String>("user_token")
+        .unwrap_or(None)
+        .is_some();
     let template = serve_types::LeaderboardTemplate {
         logged_in: user_token_exists,
         users: db::get_leaderboard_users()
@@ -108,11 +115,13 @@ pub async fn serve_leaderboard(session: Session) -> Result<HttpResponse> {
 pub async fn serve_profile(session: Session) -> Result<HttpResponse> {
     // Create the template instance with dynamic data
 
-    let user_token_exists = session.get::<String>("user_token").unwrap_or(None).is_some();
+    let user_token_exists = session
+        .get::<String>("user_token")
+        .unwrap_or(None)
+        .is_some();
     let user_email = session.get::<String>("user_email").unwrap().unwrap();
 
     // check if user_token exist in session storage
-    
 
     let template = serve_types::ProfileTemplate {
         logged_in: user_token_exists,
@@ -139,15 +148,12 @@ pub async fn serve_sign_in() -> impl Responder {
 }
 
 pub async fn serve_sign_out(session: Session) -> impl Responder {
-
     session.clear();
     // Redirect the user to Google OAuth
     HttpResponse::Found()
         .insert_header(("Location", "/"))
         .finish()
 }
-
-
 
 // apis without html
 
@@ -168,7 +174,6 @@ pub async fn oauth2callback(
             let user = db::get_or_create_user(email, user_name)
                 .await
                 .map_err(|err| actix_web::error::ErrorInternalServerError(err));
-
 
             let email = user.as_ref().unwrap().email.clone();
 
@@ -195,7 +200,11 @@ pub async fn check_answer(session: Session, req: HttpRequest) -> Result<HttpResp
     // problem/{problemId}/{answer}
     // extract id from request
 
-    let user_token_exists = session.get::<String>("user_token").unwrap_or(None).is_some();
+    let user_token_exists = session
+        .get::<String>("user_token")
+        .unwrap_or(None)
+        .is_some();
+    let user_email = session.get::<String>("user_email").unwrap().unwrap();
 
     if !user_token_exists {
         return Ok(HttpResponse::Ok().json("Unauthorized"));
@@ -216,6 +225,8 @@ pub async fn check_answer(session: Session, req: HttpRequest) -> Result<HttpResp
             let result = db::check_answer(problem_id, ans)
                 .await
                 .map_err(|err| actix_web::error::ErrorInternalServerError(err))?;
+
+            let _ = db::insert_attempted_problems(&user_email, problem_id, result).await;
 
             Ok(HttpResponse::Ok().json(result))
         }

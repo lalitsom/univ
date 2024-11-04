@@ -46,12 +46,23 @@ pub struct Problem {
 #[diesel(table_name = attempted_problems)]
 pub struct AttemptedProblem {
     pub id: i32,
-    pub user_id: i32,
-    pub problemid: i32,
+    pub user_email: String,
+    pub problem_id: i32,
     pub is_solved: bool,
     pub created_at: NaiveDateTime,
     pub updated_at: NaiveDateTime,
 }
+
+
+#[derive(Insertable)]
+#[diesel(table_name = attempted_problems)]
+pub struct NewAttempt<'a> {
+    pub user_email: &'a str,
+    pub problem_id: i32,
+    pub is_solved: bool,
+    // exclude fields like `id` and `created_at` that have defaults
+}
+
 
 impl Problem {
     // Method to get hint as a String with a default if None

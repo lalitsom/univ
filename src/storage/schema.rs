@@ -3,8 +3,9 @@
 diesel::table! {
     attempted_problems (id) {
         id -> Int4,
-        user_id -> Int4,
-        problemid -> Int4,
+        #[max_length = 255]
+        user_email -> Varchar,
+        problem_id -> Int4,
         is_solved -> Bool,
         created_at -> Timestamp,
         updated_at -> Timestamp,
@@ -40,4 +41,8 @@ diesel::table! {
     }
 }
 
-diesel::allow_tables_to_appear_in_same_query!(attempted_problems, problems, users,);
+diesel::allow_tables_to_appear_in_same_query!(
+    attempted_problems,
+    problems,
+    users,
+);

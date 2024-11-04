@@ -54,16 +54,16 @@ CREATE INDEX idx_users_email ON users (email);
 
 CREATE TABLE attempted_problems (
     id SERIAL PRIMARY KEY,
-    user_id INT NOT NULL,
-    problemId INT NOT NULL,
+    user_email VARCHAR(255) NOT NULL,
+    problem_id INT NOT NULL,
     is_solved BOOLEAN NOT NULL DEFAULT FALSE,
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 -- Indexes
-CREATE INDEX idx_attempted_problems_user_id ON attempted_problems (user_id);
-CREATE INDEX idx_attempted_problems_problemId ON attempted_problems (problemId);
+CREATE INDEX idx_attempted_problems_user_email ON attempted_problems (user_email);
+CREATE INDEX idx_attempted_problems_problem_id ON attempted_problems (problem_id);
 CREATE INDEX idx_attempted_problems_is_solved ON attempted_problems (is_solved);
 
 
