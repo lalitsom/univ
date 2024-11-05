@@ -37,7 +37,7 @@ body {
 }
 
 .hero p {
-  font-size: var(--font-size-sm);
+  font-size: var(--font-size-xs);
   color: gray;
 }
 
@@ -57,7 +57,6 @@ body {
   width: 33%;
 }
 
-
 .profile-circle {
   width: 40px;
   height: 40px;
@@ -74,4 +73,9 @@ body {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis; /* Ensure long text is truncated with an ellipsis */
+}
+
+
+.bfoot{
+  margin-top: 50vh;
 }

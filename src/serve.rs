@@ -78,7 +78,7 @@ pub async fn serve_problem(session: Session, req: HttpRequest) -> Result<HttpRes
 
             let template = serve_types::ProblemTemplate {
                 logged_in: user_token_exists,
-                problem: db::get_one_problem(problem_id)
+                problem: db::get_problem_by_id(problem_id)
                     .await
                     .map_err(|err| actix_web::error::ErrorInternalServerError(err))?,
                 already_solved: already_solved,

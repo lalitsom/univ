@@ -24,6 +24,7 @@ diesel::table! {
         #[max_length = 255]
         answer -> Varchar,
         solved_count -> Int4,
+        active -> Bool,
         created_at -> Timestamp,
         updated_at -> Timestamp,
     }
@@ -37,6 +38,7 @@ diesel::table! {
         #[max_length = 255]
         email -> Varchar,
         solved -> Int4,
+        active -> Bool,
         created_at -> Timestamp,
         updated_at -> Timestamp,
     }

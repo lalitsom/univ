@@ -16,7 +16,7 @@
   <table id="problemTable" class="table table-striped" style="width:100%">
     <thead>
       <tr>
-        <th>Id</th>
+        <th>#</th>
         <th>Problem</th>
         <th>Tags</th>
         <!-- <th>Difficulty</th> -->
@@ -28,7 +28,7 @@
       {% for problem in problems %}
       <tr>
         <td>{{problem.id}}</td>
-        <td> <a href="problem/{{problem.id}}"> {{problem.problem_statement}} </a> </td>
+        <td> <a href="problem/{{problem.id}}"> {{problem.title}} </a> </td>
         <td>
           {% for tag in problem.get_tags() %}
           <span class="badge bg-secondary">{{tag}}</span>

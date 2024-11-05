@@ -5,7 +5,7 @@
 
 {% include "common/navbar.html" %}
 
-<body>
+<body class="min-vh-100">
   <!-- Hero Section -->
   <div class="hero">
     <h1>Learn <br><span style="color:#3176FF;">
@@ -31,13 +31,74 @@
         </div>
 
       </span></h1>
-    <p>quote</p>
+    <p id="quote-para"></p>
     <a href="/problems" class="btn btn-primary">Start Now</a>
+  </div>
+
+  <div class="container my-5">
+    <div class="row text-center">
+      <!-- Pillar 1 -->
+      <div class="col-md-4">
+        <div class="card h-100">
+          <div class="card-body">
+            <h3 class="card-title">Pillar 1</h3>
+            <p class="card-text">Dedicated to helping you solve problems effectively. Get structured guidance and step-by-step approaches to complex challenges.</p>
+          </div>
+        </div>
+      </div>
+      <!-- Pillar 2 -->
+      <div class="col-md-4">
+        <div class="card h-100">
+          <div class="card-body">
+            <h3 class="card-title">Pillar 2</h3>
+            <p class="card-text">Build critical thinking skills. We encourage curiosity and reasoning, helping you form a solid foundation for any challenge.</p>
+          </div>
+        </div>
+      </div>
+      <!-- Pillar 3 -->
+      <div class="col-md-4">
+        <div class="card h-100">
+          <div class="card-body">
+            <h3 class="card-title">Pillar 3</h3>
+            <p class="card-text">Cultivate resilience. Learn strategies to keep moving forward, even when facing setbacks and complex obstacles.</p>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 
 
   {% include "common/foot.html" %}
 
 </body>
+
+
+<script>
+  function updateQuote() {
+
+    // pick up using date
+    var date = new Date().getDate();
+
+
+    var quotes = [
+      "\"Education is not the learning of facts, but the training of the mind to think.\" — Albert Einstein",
+      "\"I am always doing that which I cannot do, in order that I may learn how to do it.\" — Pablo Picasso",
+      "\"We cannot solve our problems with the same thinking we used when we created them.\" — Albert Einstein",
+      "\"You don’t understand anything until you learn it more than one way.\" — Marvin Minsky",
+      "\"Knowing is not enough; we must apply. Willing is not enough; we must do.\" — Johann Wolfgang von Goethe",
+      "\"The mind is not a vessel to be filled, but a fire to be kindled.\" — Plutarch",
+      "\"It is not that I’m so smart. But I stay with the questions much longer.\" — Albert Einstein",
+      "\"Intelligence is the ability to adapt to change.\" — Stephen Hawking",
+      "\"Success is the result of preparation, hard work, and learning from failure.\" — Colin Powell"
+    ]
+
+    var quote = quotes[date % quotes.length];
+    // var quote = quotes[Math.floor(Math.random() * quotes.length)];
+    document.getElementById("quote-para").innerHTML = quote;
+  }
+
+  updateQuote();
+
+</script>
 
 </html>

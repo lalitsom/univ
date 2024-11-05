@@ -15,7 +15,7 @@
   <table id="leaderBoardTable" class="table table-striped" style="width:100%">
     <thead>
       <tr>
-        <th>Rank</th>
+        <!-- <th>Rank</th> -->
         <th>User</th>
         <th>Solved</th>
         <th>Join Date</th>
@@ -24,7 +24,7 @@
     <tbody>
       {% for user in users %}
       <tr>
-        <td>{{user.id}}</td>
+        <!-- <td>{{user.id}}</td> -->
         <td>{{user.username}}</td>
         <td>{{user.solved}}</td>
         <td>{{user.created_ts_show()}}</td>

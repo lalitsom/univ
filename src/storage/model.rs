@@ -13,6 +13,7 @@ pub struct User {
     pub username: String,
     pub email: String,
     pub solved: i32,
+    pub active: bool,
     pub created_at: NaiveDateTime,
     pub updated_at: NaiveDateTime,
 }
@@ -39,6 +40,7 @@ pub struct Problem {
     pub hint: Option<String>,
     pub answer: String,
     pub solved_count: i32,
+    pub active: bool,
     pub created_at: NaiveDateTime,
     pub updated_at: NaiveDateTime,
 }
