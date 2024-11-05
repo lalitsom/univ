@@ -207,7 +207,6 @@ pub async fn oauth2callback(
             let user_token = Uuid::new_v4().to_string();
             session.insert("user_token", &user_token).unwrap();
             session.insert("user_email", &email).unwrap();
-            println!("User token: {}", user_token);
 
             // Redirect to profile page
             return HttpResponse::Found()

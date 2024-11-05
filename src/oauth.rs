@@ -78,18 +78,4 @@ pub async fn handle_oauth2callback(
         Err(e) => Err(Box::new(e)),
     }
     
-
-    // let access_token = token.access_token().secret();
-    // // Get the user info
-    // let user_info = reqwest::blocking::get(
-    //     "https://www.googleapis.com/oauth2/v1/userinfo?alt=json&access_token=".to_string()
-    //         + &access_token,
-    // )
-    // .expect("Failed to get user info")
-    // .json::<serde_json::Value>()
-    // .expect("Failed to parse user info");
-
-    // println!("{:?}", user_info);
-
-    // Ok("".to_string())
 }

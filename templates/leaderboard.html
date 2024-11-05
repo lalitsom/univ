@@ -11,7 +11,7 @@
 
 <div class="container mt-5">
   <h3> Leaderboard </h3>
-
+  <span class="badge bg-secondary">Solve atleast one problem for leaderboard</span>
   <table id="leaderBoardTable" class="table table-striped" style="width:100%">
     <thead>
       <tr>
@@ -41,7 +41,8 @@
 <script>
 
   new DataTable('#leaderBoardTable', {
-    order: [[2, 'desc']]
+    order: [[2, 'desc']],
+    order: [[0, 'asc']]
   });
 
 </script>

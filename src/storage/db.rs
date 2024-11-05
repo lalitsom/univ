@@ -104,6 +104,7 @@ pub async fn get_leaderboard_users() -> Result<Vec<model::User>, Error> {
         .expect("couldn't get db connection from pool");
     users
         .filter(u_active.eq(true))
+        .filter(solved.gt(0))
         .load::<model::User>(&mut conn)
 }
 
