@@ -69,21 +69,19 @@ pub async fn serve_problem(session: Session, req: HttpRequest) -> Result<HttpRes
         Some(problem_id) => {
             // Successfully parsed problem_id as an integer, use it as needed
             let mut already_solved = false;
-            if user_token_exists{
+            if user_token_exists {
                 let user_email_: String = session.get::<String>("user_email").unwrap().unwrap();
                 already_solved = db::check_already_solved(&user_email_, problem_id)
-                .await
-                .map_err(|err| actix_web::error::ErrorInternalServerError(err))?;
+                    .await
+                    .map_err(|err| actix_web::error::ErrorInternalServerError(err))?;
             }
-            
-            
 
             let template = serve_types::ProblemTemplate {
                 logged_in: user_token_exists,
                 problem: db::get_one_problem(problem_id)
                     .await
                     .map_err(|err| actix_web::error::ErrorInternalServerError(err))?,
-                already_solved: already_solved
+                already_solved: already_solved,
             };
 
             // Render the template and return as an HTTP response
@@ -129,15 +127,27 @@ pub async fn serve_profile(session: Session) -> Result<HttpResponse> {
         .get::<String>("user_token")
         .unwrap_or(None)
         .is_some();
+
+    if !user_token_exists {
+        return Ok(HttpResponse::Found()
+            .insert_header(("Location", "/sign_in"))
+            .finish());
+    }
+
     let user_email_ = session.get::<String>("user_email").unwrap().unwrap();
-
-    // check if user_token exist in session storage
-
+    let user_ = db::get_user_profile(user_email_)
+        .await.unwrap();
+    
+    if user_.is_none() {
+        return Ok(HttpResponse::Found()
+            .insert_header(("Location", "/sign_out"))
+            .finish());
+    }
+    
+    
     let template = serve_types::ProfileTemplate {
         logged_in: user_token_exists,
-        user: db::get_user_profile(user_email_)
-            .await
-            .map_err(|err| actix_web::error::ErrorInternalServerError(err))?,
+        user: user_.unwrap(),
     };
 
     // // Render the template and return as an HTTP response
@@ -250,6 +260,7 @@ pub async fn check_answer(session: Session, req: HttpRequest) -> Result<HttpResp
 
             let _ = db::insert_attempted_problems(&user_email_, problem_id, result).await;
             if result && !already_solved {
+                let _ = db::update_user_solved_count(&user_email_).await;
                 let _ = db::update_problem_solved_count(problem_id).await;
             }
 

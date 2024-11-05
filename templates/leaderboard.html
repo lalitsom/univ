@@ -26,7 +26,7 @@
       <tr>
         <td>{{user.id}}</td>
         <td>{{user.username}}</td>
-        <td>5</td>
+        <td>{{user.solved}}</td>
         <td>{{user.created_ts_show()}}</td>
       </tr>
       {% endfor %}
@@ -39,7 +39,11 @@
 
 
 <script>
-  new DataTable('#leaderBoardTable');
+
+  new DataTable('#leaderBoardTable', {
+    order: [[2, 'desc']]
+  });
+
 </script>
 
 {% include "common/foot.html" %}

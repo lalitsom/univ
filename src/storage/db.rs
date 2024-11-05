@@ -32,7 +32,7 @@ pub async fn get_one_problem(problem_id_: i32) -> Result<model::Problem, Error> 
 
 // model::User queries
 
-pub async fn get_user_profile(email_: String) -> Result<model::User, Error> {
+pub async fn get_user_profile(email_: String) -> Result<Option<model::User>, Error> {
     let state = GS::get_global_state().await;
     let mut conn = state
         .db_pool
@@ -45,7 +45,7 @@ pub async fn get_user_profile(email_: String) -> Result<model::User, Error> {
         .optional()?;
 
     
-    Ok(user.unwrap())
+    return Ok(user);
 }
 
 pub async fn get_leaderboard_users() -> Result<Vec<model::User>, Error> {
@@ -156,3 +156,17 @@ pub async fn check_already_solved(email_: &str, problem_id_: i32) -> Result<bool
     }
 }
 
+
+pub async fn update_user_solved_count(email_: &str) -> Result<(), Error> {
+    let state = GS::get_global_state().await;
+    let mut conn = state
+        .db_pool
+        .get()
+        .expect("couldn't get db connection from pool");
+
+    diesel::update(users.filter(email.eq(email_)))
+        .set(solved.eq(solved + 1))
+        .execute(&mut conn)?;
+
+    Ok(())
+}

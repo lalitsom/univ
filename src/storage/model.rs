@@ -74,6 +74,10 @@ impl Problem {
     pub fn created_ts_show(&self) -> String {
         self.created_at.format("%Y-%m-%d").to_string()
     }
+
+    pub fn get_tags(&self) -> Vec<String> {
+        self.tags.split(",").map(|s| s.to_string()).collect()
+    }
 }
 
 

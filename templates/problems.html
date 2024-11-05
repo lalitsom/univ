@@ -29,7 +29,11 @@
       <tr>
         <td>{{problem.id}}</td>
         <td> <a href="problem/{{problem.id}}"> {{problem.problem_statement}} </a> </td>
-        <td><span class="badge bg-secondary">{{problem.tags}}</span></td>
+        <td>
+          {% for tag in problem.get_tags() %}
+          <span class="badge bg-secondary">{{tag}}</span>
+          {% endfor %}
+        </td>
         <!-- <td>{{problem.difficulty}}</td> -->
         <td>{{problem.solved_count}}</td>
         <td>{{problem.created_ts_show()}}</td>
@@ -43,7 +47,9 @@
 
 
 <script>
-  new DataTable('#problemTable');
+  new DataTable('#problemTable', {
+    order: [[3, 'desc']]
+  });
 </script>
 
 {% include "common/foot.html" %}
