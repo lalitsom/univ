@@ -56,6 +56,7 @@ async fn main() -> std::io::Result<()> {
             .route("/sign_in", web::get().to(serve::serve_sign_in)) // Sign in page
             .route("/sign_out", web::get().to(serve::serve_sign_out)) // Sign in page
             .route("/profile", web::get().to(serve::serve_profile)) // user profile page
+            .route("/about", web::get().to(serve::serve_about)) // user profile page
             .route("/leaderboard", web::get().to(serve::serve_leaderboard)) // Leaderboard page
     })
     .bind(("0.0.0.0", port))?

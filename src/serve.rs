@@ -13,6 +13,25 @@ pub async fn serve_static_file(path: web::Path<String>) -> Result<NamedFile> {
         .map_err(|_| actix_web::error::ErrorNotFound("File not found"))
 }
 
+pub async fn serve_about(session: Session) -> Result<HttpResponse> {
+    let user_token_exists = session
+        .get::<String>("user_token")
+        .unwrap_or(None)
+        .is_some();
+
+    // Create the template instance with dynamic data
+    let template = serve_types::AboutTemplate {
+        logged_in: user_token_exists,
+    };
+
+    // Render the template and return as an HTTP response
+    let rendered = template
+        .render()
+        .map_err(|_| actix_web::error::ErrorInternalServerError("Template error"))?;
+
+    Ok(HttpResponse::Ok().content_type("text/html").body(rendered))
+}
+
 pub async fn serve_home(session: Session) -> Result<HttpResponse> {
     let user_token_exists = session
         .get::<String>("user_token")
@@ -135,16 +154,14 @@ pub async fn serve_profile(session: Session) -> Result<HttpResponse> {
     }
 
     let user_email_ = session.get::<String>("user_email").unwrap().unwrap();
-    let user_ = db::get_user_profile(user_email_)
-        .await.unwrap();
-    
+    let user_ = db::get_user_profile(user_email_).await.unwrap();
+
     if user_.is_none() {
         return Ok(HttpResponse::Found()
             .insert_header(("Location", "/sign_out"))
             .finish());
     }
-    
-    
+
     let template = serve_types::ProfileTemplate {
         logged_in: user_token_exists,
         user: user_.unwrap(),

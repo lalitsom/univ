@@ -8,6 +8,14 @@ pub struct HomeTemplate {
     pub logged_in: bool,
 }
 
+
+#[derive(Template)]
+#[template(path = "about.html")] // Specify the path to the HTML template
+pub struct AboutTemplate {
+    pub logged_in: bool,
+}
+
+
 #[derive(Template)]
 #[template(path = "problems.html")] // Specify the path to the HTML template
 pub struct ProblemsTemplate {
