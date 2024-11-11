@@ -18,6 +18,8 @@ Cargo.lock
 *.pdb
 
 *.env
+logfile
+problems_dump.sql
 
 # RustRover
 #  JetBrains specific template is maintained in a separate JetBrains.gitignore that can

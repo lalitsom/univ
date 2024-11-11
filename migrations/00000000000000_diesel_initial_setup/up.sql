@@ -50,8 +50,8 @@ CREATE TABLE users (
 );
 
 -- Indexes
-CREATE INDEX idx_users_username ON users (username);
 CREATE INDEX idx_users_email ON users (email);
+CREATE INDEX idx_users_active ON users (active);
 
 
 CREATE TABLE attempted_problems (
@@ -84,5 +84,5 @@ CREATE TABLE problems (
 );
 
 -- Indexes
-CREATE INDEX idx_problems_difficulty ON problems (difficulty);
+CREATE INDEX idx_active_difficulty ON problems (active);
 CREATE INDEX idx_problems_solved_count ON problems (solved_count);

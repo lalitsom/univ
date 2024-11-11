@@ -55,7 +55,7 @@ pub async fn check_answer(problem_id_: i32, answer_: String) -> Result<bool, Err
         .find(problem_id_)
         .filter(p_active.eq(true))
         .first::<model::Problem>(&mut conn)?;
-    Ok(problem.answer.parse::<i32>() == answer_.parse::<i32>())
+    Ok(problem.answer.trim() == answer_.trim())
 }
 
 pub async fn update_problem_solved_count(problem_id_: i32) -> Result<(), Error> {

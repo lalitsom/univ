@@ -21,7 +21,7 @@
     <div class="card-body">
       <h3 class="card-title">{{problem.title}}</h3>
       <p class="card-text">
-        {{problem.problem_statement}}
+        {{problem.problem_statement| safe}}
       </p>
     </div>
   </div>
@@ -56,6 +56,12 @@
     </div>
   </div>
 
+  <div id="spinner-div" class="d-flex justify-content-center mt-4" >
+    <div id="spinner" class="spinner-border text-primary"  style="display: none;" role="status">
+      <span class="visually-hidden">Checking...</span>
+    </div>
+  </div>
+
   {% endif %}
 
   {% else %}
@@ -69,11 +75,11 @@
   <div class="mt-4">
     <button class="btn btn-sm btn-outline-primary" type="button" data-bs-toggle="collapse" data-bs-target="#hint"
       aria-expanded="false" aria-controls="hint">
-      Show Hint
+      Show Hint/Resources
     </button>
     <div class="collapse mt-2" id="hint">
       <div class="card card-body">
-        {{problem.hint_or_default()}}
+        {{problem.hint_or_default()| safe}}
       </div>
     </div>
   </div>
@@ -104,9 +110,27 @@
     let problemId = document.getElementById("inputNumber").getAttribute("data-problem_id");
     let url = `/api/check_answer/${problemId}/${inputNumber}`;
 
-    fetch(url)
+    showSpinner();
+    
+    // wait for 2 second then do fetch url
+    setTimeout(() => {
+      fetchUrl(url, inputNumber);
+    }, 2000);
+  }
+
+ function fetchUrl(url, inputNumber) {
+
+  if (inputNumber.length > 30 || inputNumber.length === 0) {
+      closeSpinner();
+      showIncorrectAlert(inputNumber);
+      console.log("Invalid input",inputNumber);
+      return;
+    }
+
+  fetch(url)
       .then(response => response.json())
       .then(data => {
+        closeSpinner();
         if (data === true) {
           showSolvedAlert(inputNumber);
         } else if (data === false) {
@@ -118,6 +142,18 @@
         }
       });
   }
+
+
+  function showSpinner() {
+    document.getElementById("submit-div").style.display = "none";
+    document.getElementById("spinner").style.display = "block";
+  }
+
+  function closeSpinner() {
+    document.getElementById("submit-div").style.display = "block";
+    document.getElementById("spinner").style.display = "none";
+  }
+
 </script>
 
 </html>
